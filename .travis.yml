@@ -5,7 +5,7 @@ language: node_js
 # https://docs.codeclimate.com/docs/travis-ci-test-coverage
 env:
   global:
-    - CC_TEST_REPORTER_ID=0
+    - CC_TEST_REPORTER_ID=40c30f70634e92bb9d3eaeb108a316e46e032caabe9936669d70c23fd001098b
 
 node_js:
   - lts/*
