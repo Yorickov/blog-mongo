@@ -1,0 +1,9 @@
+/node_modules/
+*.log
+dist
+flow-typed
+.tern-port
+public/assets
+coverage
+.DS_Store
+.bash_history
