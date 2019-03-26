@@ -12,7 +12,7 @@ build:
 	npm run build
 
 test:
-	npm test
+	DEBUG=app* npm test
 
 test-watch:
 	npm test -- --watchAll

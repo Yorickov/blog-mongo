@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
 import log from './lib/log';
+import models from './models';
 
-export default { log };
+dotenv.config();
+
+export default { log, ...models };
