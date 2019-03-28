@@ -1,15 +1,39 @@
+include ../mixins/forms.pug
+
 doctype html
 html(lang='en')
   head
     title Blog
     script(src='/assets/main.js')
   body
-    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light.bg-faded
       a.navbar-brand(href=url('root')) Blog
+      button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+        span.navbar-toggler-icon
+      .collapse.navbar-collapse#navbarSupportedContent
+        ul.navbar-nav.mr-auto
+          li.nav-item
+            //- a.nav-link(href=url('session#new')) Sign in
+          //- li.nav-item
+            //- a.nav-link(href=url('users#new')) Sign up
+        //- else
+        if isSignedIn()
+          li.nav-item
+              a.nav-link(href=url('sessions#destroy') data-method='delete') Sign out
+        else
+          ul.navbar-nav
+            li.nav-item
+              a.nav-link(href=url('sessions#new')) Sign in
+            li.nav-item
+              a.nav-link(href=url('users#new')) Sign up
     .container
       .mt-1
         for message in flash
           .alert(class=`alert-${message.type}`)
             = message.message
-
-    block content
+    main(role="main")
+      .jumbotron.jumbotron-fluid.py-sm-5
+        .container
+          h1.display-4.text-center BLOG
+      //- .container.mt-md-5.py-5
+      block content

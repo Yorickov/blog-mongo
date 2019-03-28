@@ -5,7 +5,7 @@ import Router from 'named-routes';
 import methodOverride from 'method-override';
 import session from 'express-session';
 
-import flashFn from './lib/middlwares';
+import { flashFn } from './lib/middlwares';
 import NotFoundError from './lib/NotFoundError.js';
 
 import addRoutes from './routes';
@@ -37,6 +37,14 @@ export default () => {
     saveUninitialized: false,
   }));
   app.use(flashFn());
+
+  app.use((req, res, next) => {
+    res.locals.isSignedIn = () => req.session.userId !== undefined;
+    res.locals.currentUserId = req.session.userId;
+    res.locals.currentUserProfileName = req.session.userProfileName;
+    next();
+  });
+
   app.use(express.static(path.join(__dirname, '..', 'public')));
 
   addRoutes(expressRouter, container);

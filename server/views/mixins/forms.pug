@@ -1,0 +1,30 @@
+- const getInputName = (f, property) => `${f.name}[${property}]`
+
+mixin formFor(options = {})
+  - const url = options.url.toLowerCase();
+  - const method = options.method ? options.method.toLowerCase() : 'get';
+  - const isStandart = ['get', 'post'].includes(method);
+  form(action= url method= isStandart ? method : 'post')
+    if !isStandart
+      input(name='_method' type='hidden' value= method)
+    block
+
+mixin inputWithoutLabel(f, plcholder, property, options = { as: 'text' })
+  - const value = f.object[property] === undefined ? '' : f.object[property]
+  .form-group
+    input(name=getInputName(f, property) placeholder= plcholder class='form-control' type=options['as'] value=`${value}`)
+    if f.errors[property]
+      .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')
+
+mixin inputLabel(f, property, label, plcholder, options = { as: 'text' })
+  - const value = f.object[property] === undefined ? '' : f.object[property];
+  - const inputId = `input_${property}`;
+  .form-group
+    label(for= inputId)= label
+    input(name= getInputName(f, property) id= inputId placeholder= plcholder class='form-control' type= options['as'] value= value aria-describedby= emailHelp)
+    if f.errors[property]
+      .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')
+
+mixin button(color, message, type = 'submit')
+  .form-group.pt-2
+    button.btn.btn-block(class=`btn-${color}` type=`${type}` value='Save')= message

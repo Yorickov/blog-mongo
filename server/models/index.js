@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import defineUser from './User';
 
-const User = defineUser(mongoose, mongoose.Schema);
+const { model, Schema } = mongoose;
+const User = defineUser(model, Schema);
 
 export default {
   mongoose,

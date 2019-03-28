@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-export default () => (req, res, next) => {
+const flashFn = () => (req, res, next) => {
   assert(req.session, 'a req.session is required!');
   res.locals.flash = req.session.flash || [];
   req.session.flash = [];
@@ -9,3 +9,15 @@ export default () => (req, res, next) => {
   };
   next();
 };
+
+const reqAuth = router =>
+  (req, res, next) => { // eslint-disable-line
+    if (!res.locals.currentUserId) {
+      res.flash('info', 'Session time expired, relogin please');
+      res.redirect(router.namedRoutes.build('session#new'));
+      return;
+    }
+    next();
+  };
+
+export { flashFn, reqAuth };
