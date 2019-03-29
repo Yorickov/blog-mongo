@@ -20,4 +20,15 @@ const reqAuth = router =>
     next();
   };
 
-export { flashFn, reqAuth };
+const isEntityExists = Model => (
+  async (req, res, next) => {
+    try {
+      await Model.findById(req.params.id);
+      next();
+    } catch (e) {
+      res.status(404);
+      res.render('errors/404');
+    }
+  });
+
+export { flashFn, reqAuth, isEntityExists };

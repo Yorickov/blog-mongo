@@ -1,5 +1,6 @@
 import buildFormObj from '../lib/formObjectBuilder';
 import encrypt from '../lib/encrypt';
+import { reqAuth } from '../lib/middlwares';
 
 export default (router, container) => {
   const { User, log } = container;
@@ -18,14 +19,15 @@ export default (router, container) => {
         req.session.userId = user.id;
         req.session.userProfileName = user.fullName;
         log(`user sign-in: ${user.id}: ${user.fullName}`);
+        res.flash('info', 'You are authorized');
         res.redirect(router.namedRoutes.build('root'));
         return;
       }
-      res.status = 422;
+      res.status(422);
       const err = { errors: [{ path: 'password', message: 'Wrong email or password' }] };
       res.render('sessions/new', { f: buildFormObj({ email }, err) });
     })
-    .delete('/sessions', 'sessions#destroy', (req, res) => {
+    .delete('/sessions', 'sessions#destroy', reqAuth(router), (req, res) => {
       delete req.session.userId;
       res.flash('info', 'See you');
       res.redirect(router.namedRoutes.build('root'));

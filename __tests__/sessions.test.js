@@ -37,22 +37,25 @@ describe('sessions handling', () => {
     server = app().listen();
   });
 
-  it('POST /sessions 200', async () => {
+  it('Error sign in', async () => {
     const res = await request.agent(server)
       .post('/sessions')
       .type('form')
       .send({ form: { email: 'wrong@marr.com', password: 'wrong' } });
-    expect(res).toHaveHTTPStatus(200);
+    expect(res).toHaveHTTPStatus(422);
   });
 
-  it('POST/DELETE /sessions 302', async () => {
+  it('Sign in / Sign out', async () => {
     await User.create({ ...userTest, password: encrypt(userTest.password) });
     const resIn = await request.agent(server)
       .post('/sessions')
       .type('form')
       .send({ form: { email: userTest.email, password: userTest.password } });
     expect(resIn).toHaveHTTPStatus(302);
+
+    const cookie = resIn.headers['set-cookie'];
     const resOut = await request.agent(server)
+      .set('Cookie', cookie)
       .delete('/sessions');
     expect(resOut).toHaveHTTPStatus(302);
   });

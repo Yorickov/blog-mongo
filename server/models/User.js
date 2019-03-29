@@ -24,6 +24,8 @@ export default (model, Schema) => {
       type: String,
       required: [true, 'Can not be empty'],
     },
+    // posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+    // comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   }, { timestamps: true });
 
   userSchema

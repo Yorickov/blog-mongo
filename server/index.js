@@ -4,6 +4,7 @@ import path from 'path';
 import Router from 'named-routes';
 import methodOverride from 'method-override';
 import session from 'express-session';
+import format from 'date-fns/format';
 
 import { flashFn } from './lib/middlwares';
 import NotFoundError from './lib/NotFoundError.js';
@@ -39,6 +40,7 @@ export default () => {
   app.use(flashFn());
 
   app.use((req, res, next) => {
+    res.locals.formatDate = (dateString, dateFormat) => format(dateString, dateFormat);
     res.locals.isSignedIn = () => req.session.userId !== undefined;
     res.locals.currentUserId = req.session.userId;
     res.locals.currentUserProfileName = req.session.userProfileName;

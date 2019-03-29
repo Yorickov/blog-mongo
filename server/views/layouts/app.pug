@@ -13,24 +13,28 @@ html(lang='en')
       .collapse.navbar-collapse#navbarSupportedContent
         ul.navbar-nav.mr-auto
           li.nav-item
-            //- a.nav-link(href=url('session#new')) Sign in
-          //- li.nav-item
-            //- a.nav-link(href=url('users#new')) Sign up
-        //- else
-        if isSignedIn()
-          li.nav-item
-              a.nav-link(href=url('sessions#destroy') data-method='delete') Sign out
-        else
-          ul.navbar-nav
+            //- ??
+        ul.navbar-nav
+          if isSignedIn()
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle(aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#") #{currentUserProfileName}
+              .dropdown-menu.dropdown-menu-right
+                a.dropdown-item.ml-0(href=url('users#show', { id: currentUserId })) Profile
+                a.dropdown-item.ml-0(href=url('account#edit')) Settings
+                .dropdown-divider
+                a.dropdown-item.ml-0(href=url('sessions#destroy') data-method='delete' rel='nofollow') Sign Out
+          else
             li.nav-item
               a.nav-link(href=url('sessions#new')) Sign in
             li.nav-item
               a.nav-link(href=url('users#new')) Sign up
     .container
       .mt-1
-        for message in flash
-          .alert(class=`alert-${message.type}`)
-            = message.message
+        each message in flash
+          .alert.alert-dismissible.fade.show(class=`alert-${message.type}` role='alert')= message.message
+            button.close(type='button' data-dismiss="alert" aria-label='Close')
+              span(aria-hidden='true') &times
+
     main(role="main")
       .jumbotron.jumbotron-fluid.py-sm-5
         .container
