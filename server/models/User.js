@@ -18,7 +18,6 @@ export default (model, Schema) => {
       unique: true,
       index: { unique: true }, // ????
       required: [true, 'Can not be empty'],
-      // match: [/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g, 'Fill a valid email address'],
     },
     password: {
       type: String,
@@ -37,3 +36,7 @@ export default (model, Schema) => {
   const User = model('User', userSchema);
   return User;
 };
+
+// match: [/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`
+// {|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g,
+// 'Fill a valid email address'],
