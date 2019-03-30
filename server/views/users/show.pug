@@ -1,3 +1,28 @@
 extends ../layouts/app.pug
 
 block content
+	.container
+		.row.pt-5.justify-content-center
+			.col-12.col-md-8.my-4.bg-light
+				ul#myTab.nav.nav-tabs(role='tablist')
+					li.nav-item
+						a#profile-tab.nav-link.active(data-toggle='tab' href='#profile' role='tab' aria-controls='profile' aria-selected='true') Profile
+					li.nav-item
+						a#posts-tab.nav-link(data-toggle='tab' href='#posts' role='tab' aria-controls='posts' aria-selected='false') Posts
+					li.nav-item
+						a#comments-tab.nav-link(data-toggle='tab' href='#comments' role='tab' aria-controls='comments' aria-selected='false') Comments
+				#myTabContent.tab-content.py-4
+					#profile.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='profile-tab')
+						.card.shadow-sm
+							.card-body
+								h3.card-title.mb-4.text-center= user.fullName
+								.row.justify-content-between
+									.col-12.col-sm-6
+										.card-text.mr-2 #[strong Email:] #{user.email}
+									.col-12.col-sm-6.text-sm-right
+										.card-text.mr-2 #[strong Registration date:] #{formatDate(user.createdAt, 'DD.MM.YYYY')}
+							.card-footer #[strong Last connection:] #{formatDate(user.updatedAt, 'DD.MM.YYYY, HH:mm')}
+					#posts.tab-pane.fade(role='tabpanel' aria-labelledby='posts-tab')
+						| Posts
+					#comments.tab-pane.fade(role='tabpanel' aria-labelledby='comments-tab')
+						| Comments

@@ -17,7 +17,7 @@ html(lang='en')
         ul.navbar-nav
           if isSignedIn()
             li.nav-item.dropdown
-              a.nav-link.dropdown-toggle(aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#") #{currentUserProfileName}
+              a.nav-link.dropdown-toggle(aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#")
               .dropdown-menu.dropdown-menu-right
                 a.dropdown-item.ml-0(href=url('users#show', { id: currentUserId })) Profile
                 a.dropdown-item.ml-0(href=url('account#edit')) Settings

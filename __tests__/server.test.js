@@ -19,13 +19,13 @@ describe('requests', () => {
     expect(res).toHaveHTTPStatus(200);
   });
 
-  it('root / 404', async () => {
+  it('wrong root', async () => {
     const res = await request.agent(server)
       .get('/wrong-path');
     expect(res).toHaveHTTPStatus(404);
   });
 
-  it('Create user form', async () => {
+  it('Show forms users', async () => { // add postst, etc.
     const res = await request.agent(server)
       .get('/users/new');
     expect(res).toHaveHTTPStatus(200);

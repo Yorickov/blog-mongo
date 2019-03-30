@@ -12,14 +12,18 @@ block content
           .col-9
             #nav-tabContent.tab-content
               #nav-profile.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='nav-profile-tab')
-                +formFor({ url: url('root'), method: 'PATCH' })
+                +formFor({ url: url('account/profile#update'), method: 'PATCH' })
                   +inputLabel(f, 'firstName', 'First Name', 'Enter new first name')
                   +inputLabel(f, 'lastName', 'Last Name', 'Enter new first name')
-                  +button('secondary', 'Change profile') 
+                  +button('secondary', 'Save profile') 
               #nav-account.tab-pane.fade(role='tabpanel' aria-labelledby='nav-account-tab')
-                +formFor({ url: url('root'), method: 'PATCH' })
-                  +inputLabel(f, 'email', 'Email address', 'Enter new email')
-                  +button('secondary', 'Change email')
-                  .d-flex.justify-content-around.align-items-center
+                h4.py-2 Email
+                +formFor({ url: url('account/email#update'), method: 'PATCH' })
+                  +inputLabel(f, 'email', 'Enter new email address')
+                  +button('secondary', 'Save email')
+                .d-flex.flex-column.py-2
+                  .d-flex.flex-column.mb-2
+                    h4.pt-2.pb-1 Password
                     a(href=url('root')) Edit password
-                    a(href=url('root') class="text-danger") Delete account
+                  .d-flex.justify-content-start.pt-4.pb-3
+                    a.btn.btn-danger(href=url('root') role='button') Delete account

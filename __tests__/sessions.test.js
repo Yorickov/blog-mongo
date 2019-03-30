@@ -37,15 +37,7 @@ describe('sessions handling', () => {
     server = app().listen();
   });
 
-  it('Error sign in', async () => {
-    const res = await request.agent(server)
-      .post('/sessions')
-      .type('form')
-      .send({ form: { email: 'wrong@marr.com', password: 'wrong' } });
-    expect(res).toHaveHTTPStatus(422);
-  });
-
-  it('Sign in / Sign out', async () => {
+  it('Sign out', async () => {
     await User.create({ ...userTest, password: encrypt(userTest.password) });
     const resIn = await request.agent(server)
       .post('/sessions')

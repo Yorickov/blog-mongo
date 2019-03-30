@@ -16,6 +16,12 @@ const userTest = {
   email: faker.internet.email(),
   password: faker.internet.password(),
 };
+const newUserTest = {
+  ...userTest,
+  firstName: faker.name.lastName(),
+  lastName: faker.name.firstName(),
+};
+const newEmail = faker.internet.email();
 
 describe('users handling', () => {
   let server;
@@ -36,55 +42,67 @@ describe('users handling', () => {
     server = app().listen();
   });
 
-  it('Create user', async () => {
-    const res = await request.agent(server)
-      .post('/users')
-      .type('form')
-      .send({ form: userTest });
-    expect(res).toHaveHTTPStatus(302);
-    const cnt = await User.countDocuments();
-    expect(cnt).toEqual(1);
-  });
-
-  it('Error create user', async () => {
-    const res = await request.agent(server)
+  it('CRUD user', async () => {
+    const validErr = await request.agent(server)
       .post('/users')
       .type('form')
       .send({ form: { ...userTest, firstName: '' } });
-    expect(res).toHaveHTTPStatus(422);
-  });
+    expect(validErr).toHaveHTTPStatus(422);
 
-  it('Edit user form', async () => {
-    const resIn = await request.agent(server)
+    const userCreated = await request.agent(server)
+      .post('/users')
+      .type('form')
+      .send({ form: userTest });
+    expect(userCreated).toHaveHTTPStatus(302);
+    const cnt = await User.countDocuments();
+    expect(cnt).toEqual(1);
+
+    const signInErr = await request.agent(server)
+      .post('/sessions')
+      .type('form')
+      .send({ form: { email: 'wrong@marr.com', password: 'wrong' } });
+    expect(signInErr).toHaveHTTPStatus(422);
+
+    const signIn = await request.agent(server)
       .post('/sessions')
       .type('form')
       .send({ form: { email: userTest.email, password: userTest.password } });
-    expect(resIn).toHaveHTTPStatus(302);
+    expect(signIn).toHaveHTTPStatus(302);
+    const cookie = signIn.headers['set-cookie'];
 
-    const cookie = resIn.headers['set-cookie'];
-    const resEdit = await request.agent(server)
+    const user = await User.findOne({ email: userTest.email });
+    const profileErr = await request.agent(server)
+      .get('/users/444')
+      .set('Cookie', cookie);
+    expect(profileErr).toHaveHTTPStatus(404);
+
+    const profile = await request.agent(server)
+      .get(`/users/${user.id}`)
+      .set('Cookie', cookie);
+    expect(profile).toHaveHTTPStatus(200);
+
+    const profileUpdateForm = await request.agent(server)
       .get('/account/edit')
       .set('Cookie', cookie);
-    expect(resEdit).toHaveHTTPStatus(200);
-  });
+    expect(profileUpdateForm).toHaveHTTPStatus(200);
 
-  it('Show user', async () => { // ERROR show user !!!!
-    const user = await User.findOne({ email: userTest.email });
-    const resIn = await request.agent(server)
-      .post('/sessions')
+    const profileUpdated = await request.agent(server)
+      .patch('/account/profile')
       .type('form')
-      .send({ form: { email: userTest.email, password: userTest.password } });
-
-    const cookie = resIn.headers['set-cookie'];
-    const resErr = await request.agent(server)
       .set('Cookie', cookie)
-      .get('/users/444');
-    expect(resErr).toHaveHTTPStatus(404);
+      .send({ form: { firstName: newUserTest.firstName, lastName: newUserTest.lastName } });
+    expect(profileUpdated).toHaveHTTPStatus(302);
+    const isNewProfile = await User.findOne({ email: newUserTest.email });
+    expect(isNewProfile.firstName).toMatch(newUserTest.firstName);
 
-    const resOut = await request.agent(server)
+    const emailUpdated = await request.agent(server)
+      .patch('/account/email')
+      .type('form')
       .set('Cookie', cookie)
-      .get(`/users/${user.id}`);
-    expect(resOut).toHaveHTTPStatus(200);
+      .send({ form: { email: newEmail } });
+    expect(emailUpdated).toHaveHTTPStatus(302);
+    const isNewEmail = await User.findOne({ email: newEmail });
+    expect(isNewEmail.firstName).toMatch(newUserTest.firstName);
   });
 
   afterAll(async () => {

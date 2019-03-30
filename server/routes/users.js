@@ -30,7 +30,7 @@ export default (router, container) => {
     })
     .get('/users/:id', 'users#show', isEntityExists(User), async (req, res) => { // reqEntityExists(router, User)
       const user = await User.findById(req.params.id);
-      log(`user: ${user}`);
+      log(`profile user_id: ${user.id}`);
       res.render('users/show', { user });
     });
 };

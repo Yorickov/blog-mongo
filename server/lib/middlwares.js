@@ -14,7 +14,7 @@ const reqAuth = router =>
   (req, res, next) => { // eslint-disable-line
     if (!res.locals.currentUserId) {
       res.flash('info', 'Session time expired, relogin please');
-      res.redirect(router.namedRoutes.build('session#new'));
+      res.redirect(router.namedRoutes.build('sessions#new'));
       return;
     }
     next();
@@ -27,7 +27,7 @@ const isEntityExists = Model => (
       next();
     } catch (e) {
       res.status(404);
-      res.render('errors/404');
+      res.render('errors/404'); // ???
     }
   });
 
