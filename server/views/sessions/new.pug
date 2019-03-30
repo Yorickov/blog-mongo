@@ -8,6 +8,6 @@ block content
           .card-body
             h3.mb-4.mt-3.text-center Login form
             +formFor({ url: url('sessions#create'), method: 'post' })
-              +inputWithoutLabel(f, 'e-mail', 'email')
+              +inputWithoutLabel(f, 'email', 'email')
               +inputWithoutLabel(f, 'password', 'password', { as: 'password' })
               +button('secondary', 'Confirm')

@@ -1,0 +1,12 @@
+extends ../layouts/app.pug
+
+block content
+  .container.fluid
+    .row.justify-content-center.pb-5.mt-5
+      .col-12.col-sm-7.col-md-5
+        .card.shadow.border-top.border-primary
+          .card-body
+            h3.mb-4.mt-3.text-center Delete account
+            +formFor({ url: url('account#destroy'), method: 'DELETE' })
+              +inputWithoutLabel(f, 'password', 'Enter password', { as: 'password' })
+              +button('secondary', 'Confirm')

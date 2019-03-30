@@ -3,6 +3,7 @@ import matchers from 'jest-supertest-matchers';
 import MongoMemoryServer from 'mongodb-memory-server';
 import faker from 'faker';
 
+import encrypt from '../server/lib/encrypt';
 import app from '../server';
 import container from '../server/container';
 
@@ -22,6 +23,7 @@ const newUserTest = {
   lastName: faker.name.firstName(),
 };
 const newEmail = faker.internet.email();
+const newPassword = faker.internet.password();
 
 describe('users handling', () => {
   let server;
@@ -68,6 +70,7 @@ describe('users handling', () => {
       .type('form')
       .send({ form: { email: userTest.email, password: userTest.password } });
     expect(signIn).toHaveHTTPStatus(302);
+
     const cookie = signIn.headers['set-cookie'];
 
     const user = await User.findOne({ email: userTest.email });
@@ -103,6 +106,34 @@ describe('users handling', () => {
     expect(emailUpdated).toHaveHTTPStatus(302);
     const isNewEmail = await User.findOne({ email: newEmail });
     expect(isNewEmail.firstName).toMatch(newUserTest.firstName);
+
+    const passUpdatedForm = await request.agent(server)
+      .get('/account/password_edit')
+      .set('Cookie', cookie);
+    expect(passUpdatedForm).toHaveHTTPStatus(200);
+
+    const passUpdated = await request.agent(server)
+      .patch('/account/password')
+      .type('form')
+      .set('Cookie', cookie)
+      .send({ form: { password: newPassword, oldPassword: userTest.password } });
+    expect(passUpdated).toHaveHTTPStatus(302);
+    const isNewPass = await User.findOne({ email: newEmail });
+    expect(isNewPass.password).toMatch(encrypt(newPassword));
+
+    const accDeleteForm = await request.agent(server)
+      .get('/account/destroy')
+      .set('Cookie', cookie);
+    expect(accDeleteForm).toHaveHTTPStatus(200);
+
+    const accDelete = await request.agent(server)
+      .delete('/account')
+      .type('form')
+      .set('Cookie', cookie)
+      .send({ form: { password: newPassword } });
+    expect(accDelete).toHaveHTTPStatus(302);
+    const cntUsr = await User.countDocuments();
+    expect(cntUsr).toEqual(0);
   });
 
   afterAll(async () => {

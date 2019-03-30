@@ -9,7 +9,7 @@ mixin formFor(options = {})
       input(name='_method' type='hidden' value= method)
     block
 
-mixin inputWithoutLabel(f, plcholder, property, options = { as: 'text' })
+mixin inputWithoutLabel(f, property, plcholder, options = { as: 'text' })
   - const value = f.object[property] === undefined ? '' : f.object[property]
   .form-group
     input(name=getInputName(f, property) placeholder= plcholder class='form-control' type=options['as'] value=`${value}`)

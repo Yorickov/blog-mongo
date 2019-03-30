@@ -10,8 +10,7 @@ export default (router, container) => {
       res.render('sessions/new', { f: buildFormObj(user) });
     })
     .post('/sessions', 'sessions#create', async (req, res) => {
-      const { form } = req.body;
-      const { email, password } = form;
+      const { form: { email, password } } = req.body;
       const user = await User.findOne({ email });
       if (user && user.password === encrypt(password)) {
         req.session.userId = user.id;

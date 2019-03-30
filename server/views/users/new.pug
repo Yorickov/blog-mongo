@@ -8,8 +8,8 @@ block content
           .card-body
             h3.mb-4.mt-3.text-center Registration form
             +formFor({ url: url('users#create'), method: 'post' })
-              +inputWithoutLabel(f, 'e-mail', 'email')
-              +inputWithoutLabel(f, 'first name', 'firstName')
-              +inputWithoutLabel(f, 'last name', 'lastName')
+              +inputWithoutLabel(f, 'email', 'email')
+              +inputWithoutLabel(f, 'firstName', 'First name')
+              +inputWithoutLabel(f, 'lastName', 'Last name')
               +inputWithoutLabel(f, 'password', 'password', { as: 'password' })
               +button('secondary', 'Confirm')
