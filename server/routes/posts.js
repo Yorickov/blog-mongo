@@ -1,11 +1,10 @@
 import buildFormObj from '../lib/formObjectBuilder';
-import { reqAuth } from '../lib/middlwares';
+import { reqAuth, isEntityExists } from '../lib/middlwares';
 
 export default (router, container) => {
   const { Post, log, mongoose } = container;
   router
     .get('/posts/new', 'posts#new', reqAuth(router), (req, res) => {
-      log('......');
       const post = {};
       res.render('posts/new', { f: buildFormObj(post) });
     })
@@ -22,5 +21,9 @@ export default (router, container) => {
         res.status(422);
         res.render('posts/new', { f: buildFormObj(form, e) });
       }
+    })
+    .get('/posts/:id', 'posts#show', isEntityExists(Post), async (req, res) => {
+      const post = await Post.findById(req.params.id);
+      res.render('posts/show', { post });
     });
 };

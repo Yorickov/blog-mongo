@@ -1,4 +1,17 @@
 extends ../layouts/app.pug
 
 block content
-  h3.text-center Welcome
+  .container.my-5.py-5
+    .row.justify-content-center
+      .col-12.col-lg-10.col-xl-8
+        if posts.length > 0
+          each post in posts
+            .mb-5.pb-5
+              h2.mt-2.mb-4
+                a.list-item(href=url('posts#show', { id: post.id }))= post.title
+              .mt-4
+                p= post.annotation
+              .mt-4
+                a.list-item(href=url('posts#show', { id: post.id })) Read more
+        else
+          p Пусто

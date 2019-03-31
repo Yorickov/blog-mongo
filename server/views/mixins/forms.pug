@@ -34,6 +34,6 @@ mixin textarea(f, property, label, options = { as: 'text' })
   - const textareaId = `textaria_${property}`;
   .form-group
     label(for= textareaId)= label
-    textarea(name= getInputName(f, property) id= textariaId class='form-control' type= options['as'] value= value)
+    textarea(name= getInputName(f, property) id= textariaId class='form-control' type= options['as'])= value
     if f.errors[property]
       .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')

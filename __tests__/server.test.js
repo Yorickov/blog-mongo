@@ -13,12 +13,6 @@ describe('requests', () => {
     server = app().listen();
   });
 
-  it('root', async () => {
-    const res = await request.agent(server)
-      .get('/');
-    expect(res).toHaveHTTPStatus(200);
-  });
-
   it('wrong root', async () => {
     const res = await request.agent(server)
       .get('/wrong-path');

@@ -15,7 +15,7 @@ export default (model, Schema) => {
     content: {
       type: String,
       trim: true,
-      maxLength: [10000, 'Can not be more then 10000 symbols'],
+      required: [true, 'Can not be empty'],
     },
   }, { timestamps: true });
 

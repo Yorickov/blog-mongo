@@ -52,6 +52,12 @@ describe('posts handling', () => {
     cookie = auth.headers['set-cookie'];
   });
 
+  it('root', async () => {
+    const res = await request.agent(server)
+      .get('/');
+    expect(res).toHaveHTTPStatus(200);
+  });
+
   it('CRUD post', async () => {
     const postForm = await request.agent(server)
       .get('/posts/new')
@@ -66,6 +72,14 @@ describe('posts handling', () => {
     expect(postAdded).toHaveHTTPStatus(302);
     const cnt = await Post.countDocuments();
     expect(cnt).toEqual(1);
+
+    const post = await Post.findOne({ title: postTest.title });
+    const postErr = await request.agent(server)
+      .get('/posts/444');
+    expect(postErr).toHaveHTTPStatus(404);
+    const postTrue = await request.agent(server)
+      .get(`/posts/${post.id}`);
+    expect(postTrue).toHaveHTTPStatus(200);
   });
 
   afterAll(async () => {

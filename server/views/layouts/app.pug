@@ -12,6 +12,8 @@ html(lang='en')
         span.navbar-toggler-icon
       .collapse.navbar-collapse#navbarSupportedContent
         ul.navbar-nav.mr-auto
+          li.nav-item
+            a.nav-link(href=url('root')) Posts
           if isSignedIn()
             li.nav-item
               a.nav-link(href=url('root')) My Posts

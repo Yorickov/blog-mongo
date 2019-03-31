@@ -3,7 +3,7 @@ import encrypt from '../lib/encrypt';
 import { isEntityExists } from '../lib/middlwares';
 
 export default (router, container) => {
-  const { User, log } = container;
+  const { User, log, mongoose } = container;
   router
     .get('/users/new', 'users#new', (req, res) => {
       const user = {};
@@ -15,7 +15,7 @@ export default (router, container) => {
       const user = new User({
         ...form,
         password,
-        _id: new container.mongoose.Types.ObjectId(),
+        _id: new mongoose.Types.ObjectId(),
       });
       try {
         await user.save();
