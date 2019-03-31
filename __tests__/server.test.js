@@ -25,7 +25,7 @@ describe('requests', () => {
     expect(res).toHaveHTTPStatus(404);
   });
 
-  it('Show forms users', async () => { // add postst, etc.
+  it('Show forms users', async () => {
     const res = await request.agent(server)
       .get('/users/new');
     expect(res).toHaveHTTPStatus(200);

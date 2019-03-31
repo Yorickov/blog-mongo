@@ -28,3 +28,12 @@ mixin inputLabel(f, property, label, options = { as: 'text' })
 mixin button(color, message, type = 'submit')
   .form-group.pt-2
     button.btn.btn-block(class=`btn-${color}` type=`${type}` value='Save')= message
+
+mixin textarea(f, property, label, options = { as: 'text' })
+  - const value = f.object[property] === undefined ? '' : f.object[property];
+  - const textareaId = `textaria_${property}`;
+  .form-group
+    label(for= textareaId)= label
+    textarea(name= getInputName(f, property) id= textariaId class='form-control' type= options['as'] value= value)
+    if f.errors[property]
+      .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')

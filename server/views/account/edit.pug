@@ -13,8 +13,8 @@ block content
             #nav-tabContent.tab-content
               #nav-profile.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='nav-profile-tab')
                 +formFor({ url: url('account/profile#update'), method: 'PATCH' })
-                  +inputLabel(f, 'firstName', 'First Name', 'Enter new first name')
-                  +inputLabel(f, 'lastName', 'Last Name', 'Enter new first name')
+                  +inputLabel(f, 'firstName', 'First Name')
+                  +inputLabel(f, 'lastName', 'Last Name')
                   +button('secondary', 'Save profile') 
               #nav-account.tab-pane.fade(role='tabpanel' aria-labelledby='nav-account-tab')
                 h4.py-2 Email

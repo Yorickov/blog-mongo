@@ -7,7 +7,7 @@ block content
         .card.shadow.border-top.border-primary
           .card-body
             h3.mb-4.mt-3.text-center Login form
-            +formFor({ url: url('sessions#create'), method: 'post' })
+            +formFor({ url: url('sessions#create'), method: 'POST' })
               +inputWithoutLabel(f, 'email', 'email')
               +inputWithoutLabel(f, 'password', 'password', { as: 'password' })
               +button('secondary', 'Confirm')

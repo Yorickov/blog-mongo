@@ -12,8 +12,11 @@ html(lang='en')
         span.navbar-toggler-icon
       .collapse.navbar-collapse#navbarSupportedContent
         ul.navbar-nav.mr-auto
-          li.nav-item
-            //- ??
+          if isSignedIn()
+            li.nav-item
+              a.nav-link(href=url('root')) My Posts
+            li.nav-item
+              a.nav-link(href=url('posts#new')) Add Post
         ul.navbar-nav
           if isSignedIn()
             li.nav-item.dropdown

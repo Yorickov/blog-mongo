@@ -7,7 +7,7 @@ block content
         .card.shadow.border-top.border-primary
           .card-body
             h3.mb-4.mt-3.text-center Registration form
-            +formFor({ url: url('users#create'), method: 'post' })
+            +formFor({ url: url('users#create'), method: 'POST' })
               +inputWithoutLabel(f, 'email', 'email')
               +inputWithoutLabel(f, 'firstName', 'First name')
               +inputWithoutLabel(f, 'lastName', 'Last name')
