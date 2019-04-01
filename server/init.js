@@ -1,6 +1,6 @@
-export default async ({ mongoose: { connect }, log }) => {
+export default async ({ mongoose, log }) => {
   try {
-    await connect(process.env.DB_HOST, {
+    await mongoose.connect(process.env.DB_HOST, {
       useNewUrlParser: true,
     });
     log(`Successfully connected on host ${process.env.DB_HOST}`);

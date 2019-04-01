@@ -5,8 +5,7 @@ export default (router, container) => {
   const { Post, log, mongoose } = container;
   router
     .get('/posts/new', 'posts#new', reqAuth(router), (req, res) => {
-      const post = {};
-      res.render('posts/new', { f: buildFormObj(post) });
+      res.render('posts/new', { f: buildFormObj({}) });
     })
     .post('/posts', 'posts#create', reqAuth(router), async (req, res) => {
       const { form } = req.body;
@@ -32,7 +31,6 @@ export default (router, container) => {
     })
     .patch('/posts/:id/update', 'posts#update', async (req, res) => {
       const { form } = req.body;
-      // const { title, annotation, content } = form;
       const post = await Post.findById(req.params.id);
       const updatedPost = updateEntity(post, form);
       // const post = await Post.findById(req.params.id);
@@ -49,6 +47,22 @@ export default (router, container) => {
         log(e);
         res.status(422);
         res.render('posts/edit', { f: buildFormObj(form, e), post: updatedPost });
+      }
+    })
+    .get('/posts/:id/destroy_edit', 'posts#destroy_edit', reqAuth(router), isEntityExists(Post), async (req, res) => {
+      const post = await Post.findById(req.params.id);
+      res.render('posts/destroy', { post });
+    })
+    .delete('/posts/:id/destroy', 'posts#destroy', reqAuth(router), isEntityExists(Post), async (req, res) => {
+      const post = await Post.findById(req.params.id);
+      try {
+        await Post.findByIdAndDelete(post.id);
+        res.flash('info', 'Post deleted');
+        res.redirect(router.namedRoutes.build('root'));
+      } catch (e) {
+        res.status(422);
+        res.flash('info', 'Post not deleted');
+        res.redirect(router.namedRoutes.build('posts#show', { id: post.id }));
       }
     });
 };

@@ -10,15 +10,14 @@ const flashFn = () => (req, res, next) => {
   next();
 };
 
-const reqAuth = router =>
-  (req, res, next) => { // eslint-disable-line
-    if (!res.locals.currentUserId) {
-      res.flash('info', 'Session time expired, relogin please');
-      res.redirect(router.namedRoutes.build('sessions#new'));
-      return;
-    }
-    next();
-  };
+const reqAuth = router => (req, res, next) => {
+  if (!res.locals.currentUserId) {
+    res.flash('info', 'Session time expired, relogin please');
+    res.redirect(router.namedRoutes.build('sessions#new'));
+    return;
+  }
+  next();
+};
 
 const isEntityExists = Model => (
   async (req, res, next) => {

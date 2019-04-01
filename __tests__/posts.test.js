@@ -102,6 +102,18 @@ describe('posts handling', () => {
     expect(postUpdated).toHaveHTTPStatus(302);
     const isNewPost = await Post.findOne({ title: newPostTest.title });
     expect(isNewPost.content).toMatch(newPostTest.content);
+
+    const postDeleteForm = await request.agent(server)
+      .get(`/posts/${post.id}/destroy_edit`)
+      .set('Cookie', cookie);
+    expect(postDeleteForm).toHaveHTTPStatus(200);
+
+    const postDelete = await request.agent(server)
+      .delete(`/posts/${post.id}/destroy`)
+      .set('Cookie', cookie);
+    expect(postDelete).toHaveHTTPStatus(302);
+    const cntUsr = await Post.countDocuments();
+    expect(cntUsr).toEqual(0);
   });
 
   afterAll(async () => {

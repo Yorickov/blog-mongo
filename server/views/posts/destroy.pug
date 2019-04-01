@@ -1,0 +1,11 @@
+extends ../layouts/app.pug
+
+block content
+	.container
+		.row.pt-4
+			.col-10.col-sm-8.col-md-4.mx-auto
+				.card.shadow.border-top.border-primary.py-3
+					.card-body
+						h5.card-title.text-center.pb-3 Are you shure?
+						.d-flex.justify-content-center
+							a.text-center.btn.btn-danger.btn.active(href=url('posts#destroy', { id: post.id }) role='button' aria-pressed='true' data-method='delete' rel='nofollow') YES

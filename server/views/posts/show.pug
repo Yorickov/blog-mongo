@@ -1,12 +1,15 @@
 extends ../layouts/app.pug
 
 block content
-	.container.my-5.py-5
+	.container.my-5.py-5.bg-light
 		.row.justify-content-center
 			.col-12.col-lg-10.col-xl-8
 				.mb-5.pb-3
 					h1.mt-2.mb-4= post.title
 					.mt-4= post.content
-				.mb-5.pb-3
+				.d-flex.justify-content-center
 					if isSignedIn()
-						a.list-item(href=url('posts#edit', { id: post.id })) Edit post
+						.col-6
+							a.list-item(href=url('posts#edit', { id: post.id })) Edit post
+						.col-6
+							a.list-item(href=url('posts#destroy_edit', { id: post.id })) Delete post
