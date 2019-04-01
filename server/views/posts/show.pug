@@ -7,3 +7,6 @@ block content
 				.mb-5.pb-3
 					h1.mt-2.mb-4= post.title
 					.mt-4= post.content
+				.mb-5.pb-3
+					if isSignedIn()
+						a.list-item(href=url('posts#edit', { id: post.id })) Edit post

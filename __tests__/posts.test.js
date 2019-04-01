@@ -25,6 +25,13 @@ const postTest = {
   content: faker.lorem.word(),
 };
 
+const newPostTest = {
+  ...postTest,
+  title: faker.lorem.word(),
+  annotation: faker.lorem.word(),
+  content: faker.lorem.word(),
+};
+
 describe('posts handling', () => {
   let server;
   let mongoServer;
@@ -74,12 +81,27 @@ describe('posts handling', () => {
     expect(cnt).toEqual(1);
 
     const post = await Post.findOne({ title: postTest.title });
+
     const postErr = await request.agent(server)
       .get('/posts/444');
     expect(postErr).toHaveHTTPStatus(404);
     const postTrue = await request.agent(server)
       .get(`/posts/${post.id}`);
     expect(postTrue).toHaveHTTPStatus(200);
+
+    const postUpdateForm = await request.agent(server)
+      .get(`/posts/${post.id}/edit`)
+      .set('Cookie', cookie);
+    expect(postUpdateForm).toHaveHTTPStatus(200);
+
+    const postUpdated = await request.agent(server)
+      .patch(`/posts/${post.id}/update`)
+      .type('form')
+      .set('Cookie', cookie)
+      .send({ form: { title: newPostTest.title, content: newPostTest.content } });
+    expect(postUpdated).toHaveHTTPStatus(302);
+    const isNewPost = await Post.findOne({ title: newPostTest.title });
+    expect(isNewPost.content).toMatch(newPostTest.content);
   });
 
   afterAll(async () => {

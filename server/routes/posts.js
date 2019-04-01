@@ -1,5 +1,5 @@
 import buildFormObj from '../lib/formObjectBuilder';
-import { reqAuth, isEntityExists } from '../lib/middlwares';
+import { reqAuth, isEntityExists, updateEntity } from '../lib/middlwares';
 
 export default (router, container) => {
   const { Post, log, mongoose } = container;
@@ -25,5 +25,30 @@ export default (router, container) => {
     .get('/posts/:id', 'posts#show', isEntityExists(Post), async (req, res) => {
       const post = await Post.findById(req.params.id);
       res.render('posts/show', { post });
+    })
+    .get('/posts/:id/edit', 'posts#edit', reqAuth(router), isEntityExists(Post), async (req, res) => {
+      const post = await Post.findById(req.params.id);
+      res.render('posts/edit', { f: buildFormObj(post), post });
+    })
+    .patch('/posts/:id/update', 'posts#update', async (req, res) => {
+      const { form } = req.body;
+      // const { title, annotation, content } = form;
+      const post = await Post.findById(req.params.id);
+      const updatedPost = updateEntity(post, form);
+      // const post = await Post.findById(req.params.id);
+      // post.title = title;
+      // post.annotation = annotation;
+      // post.content = content;
+      try {
+        await updatedPost.save();
+        log(`post ${updatedPost.title} updated`);
+        res.flash('info', 'Post has been updated');
+        res.redirect(router.namedRoutes.build('posts#show', { id: updatedPost.id }));
+        return;
+      } catch (e) {
+        log(e);
+        res.status(422);
+        res.render('posts/edit', { f: buildFormObj(form, e), post: updatedPost });
+      }
     });
 };

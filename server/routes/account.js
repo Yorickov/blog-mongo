@@ -1,6 +1,6 @@
 import buildFormObj from '../lib/formObjectBuilder';
 import encrypt from '../lib/encrypt';
-import { reqAuth } from '../lib/middlwares';
+import { reqAuth, updateEntity } from '../lib/middlwares';
 
 export default (router, container) => {
   const { User, log } = container;
@@ -21,12 +21,13 @@ export default (router, container) => {
       const { form } = req.body;
       log(`form: ${form.firstName} ${form.lastName}`);
       const user = await User.findById(req.session.userId);
-      user.firstName = form.firstName;
-      user.lastName = form.lastName;
+      // user.firstName = form.firstName;
+      // user.lastName = form.lastName;
+      const newUser = updateEntity(user, form);
       // user.markModified('lastName');
       try {
-        await user.save();
-        log(`Profile updated to ${user.firstName}, ${user.lastName}`);
+        await newUser.save();
+        log(`Profile updated to ${newUser.firstName}, ${newUser.lastName}`);
         res.flash('info', 'Profile has been updated');
         res.redirect(router.namedRoutes.build('root'));
         return;
