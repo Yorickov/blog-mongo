@@ -1,8 +1,9 @@
 export default (router, container) => {
-  const { Post } = container;
+  const { Post, Category } = container;
   router
     .get('/', 'root', async (req, res) => {
       const posts = await Post.find({});
-      res.render('welcome/index', { posts });
+      const categories = await Category.find({});
+      res.render('welcome/index', { posts, categories });
     });
 };

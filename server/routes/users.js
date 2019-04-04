@@ -6,8 +6,7 @@ export default (router, container) => {
   const { User, log, mongoose } = container;
   router
     .get('/users/new', 'users#new', (req, res) => {
-      const user = {};
-      res.render('users/new', { f: buildFormObj(user) });
+      res.render('users/new', { f: buildFormObj({}) });
     })
     .post('/users', 'users#create', async (req, res) => {
       const { form } = req.body;
@@ -24,6 +23,7 @@ export default (router, container) => {
         res.redirect(router.namedRoutes.build('root'));
         return;
       } catch (e) {
+        log(e);
         res.status(422);
         res.render('users/new', { f: buildFormObj(form, e) });
       }

@@ -23,8 +23,8 @@ export default (model, Schema) => {
       type: String,
       required: [true, 'Can not be empty'],
     },
-    // posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
-    // comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    posts: [{ type: Schema.Types.ObjectId, ref: 'Post', autopopulate: true }],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', autopopulate: true }],
   }, { timestamps: true });
 
   userSchema
@@ -32,6 +32,7 @@ export default (model, Schema) => {
     .get(function () { // eslint-disable-line
       return `${this.firstName} ${this.lastName}`;
     });
+  userSchema.plugin(require('mongoose-autopopulate')); // eslint-disable-line
 
   const User = model('User', userSchema);
   return User;

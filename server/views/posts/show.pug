@@ -1,14 +1,18 @@
 extends ../layouts/app.pug
 
 block content
-	.container.my-5.py-5.bg-light
+	.container
 		.row.justify-content-center
 			.col-12.col-lg-10.col-xl-8
 				.mb-5.pb-3
+					p
+						a.list-item(href=url('root'))= post.category.name
 					h1.mt-2.mb-4= post.title
+					p
+						a.list-item(href=url('root'))= post.author.fullName
 					.mt-4= post.content
 				.d-flex.justify-content-center
-					if isSignedIn()
+					if post.author.id === currentUserId
 						.col-6
 							a.list-item(href=url('posts#edit', { id: post.id })) Edit post
 						.col-6

@@ -17,7 +17,19 @@ export default (model, Schema) => {
       trim: true,
       required: [true, 'Can not be empty'],
     },
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      autopopulate: true,
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
+      autopopulate: true,
+    },
   }, { timestamps: true });
+
+  postSchema.plugin(require('mongoose-autopopulate')); // eslint-disable-line
 
   const Post = model('Post', postSchema);
   return Post;

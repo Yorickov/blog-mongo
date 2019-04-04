@@ -6,8 +6,7 @@ export default (router, container) => {
   const { User, log } = container;
   router
     .get('/sessions/new', 'sessions#new', (req, res) => {
-      const user = {};
-      res.render('sessions/new', { f: buildFormObj(user) });
+      res.render('sessions/new', { f: buildFormObj({}) });
     })
     .post('/sessions', 'sessions#create', async (req, res) => {
       const { form: { email, password } } = req.body;

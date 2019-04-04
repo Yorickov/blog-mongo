@@ -8,7 +8,17 @@ import app from '../server';
 import container from '../server/container';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000; //eslint-disable-line
-const { User, Post, mongoose } = container;
+const {
+  User,
+  Post,
+  Category,
+  mongoose,
+} = container;
+
+const categoryTest = {
+  _id: new container.mongoose.Types.ObjectId(),
+  name: 'sport',
+};
 
 const userTest = {
   _id: new container.mongoose.Types.ObjectId(),
@@ -25,10 +35,9 @@ const postTest = {
   content: faker.lorem.word(),
 };
 
-const newPostTest = {
-  ...postTest,
+const postTestUpdateForm = {
   title: faker.lorem.word(),
-  annotation: faker.lorem.word(),
+  annotation: postTest.annotation,
   content: faker.lorem.word(),
 };
 
@@ -36,6 +45,7 @@ describe('posts handling', () => {
   let server;
   let mongoServer;
   let user; // eslint-disable-line
+  let category; // eslint-disable-line
   let cookie;
 
   beforeAll(async () => {
@@ -47,7 +57,16 @@ describe('posts handling', () => {
     }, (err) => {
       if (err) console.error(err);
     });
-    user = User.create({ ...userTest, password: encrypt(userTest.password) });
+    user = await User.create({ ...userTest, password: encrypt(userTest.password) });
+    await Category.create(categoryTest);
+    category = await Category.findOne({ name: categoryTest.name });
+    // await Category.create(
+    //   { _id: mongoose.Types.ObjectId(), name: 'business' },
+    //   { _id: mongoose.Types.ObjectId(), name: 'health' },
+    //   { _id: mongoose.Types.ObjectId(), name: 'entertainment' },
+    //   { _id: mongoose.Types.ObjectId(), name: 'sport' },
+    //   { _id: mongoose.Types.ObjectId(), name: 'culture' },
+    // );
   });
 
   beforeEach(async () => {
@@ -75,12 +94,13 @@ describe('posts handling', () => {
       .post('/posts')
       .type('form')
       .set('Cookie', cookie)
-      .send({ form: postTest });
+      .send({ form: { ...postTest, category: category.id } });
     expect(postAdded).toHaveHTTPStatus(302);
     const cnt = await Post.countDocuments();
     expect(cnt).toEqual(1);
 
     const post = await Post.findOne({ title: postTest.title });
+    expect(post.category.name).toMatch(categoryTest.name);
 
     const postErr = await request.agent(server)
       .get('/posts/444');
@@ -98,10 +118,10 @@ describe('posts handling', () => {
       .patch(`/posts/${post.id}/update`)
       .type('form')
       .set('Cookie', cookie)
-      .send({ form: { title: newPostTest.title, content: newPostTest.content } });
+      .send({ form: { ...postTestUpdateForm, category: category.id } });
     expect(postUpdated).toHaveHTTPStatus(302);
-    const isNewPost = await Post.findOne({ title: newPostTest.title });
-    expect(isNewPost.content).toMatch(newPostTest.content);
+    const isNewPost = await Post.findOne({ title: postTestUpdateForm.title });
+    expect(isNewPost.content).toMatch(postTestUpdateForm.content);
 
     const postDeleteForm = await request.agent(server)
       .get(`/posts/${post.id}/destroy_edit`)

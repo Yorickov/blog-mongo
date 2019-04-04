@@ -32,7 +32,7 @@ export default (router, container) => {
         res.redirect(router.namedRoutes.build('root'));
         return;
       } catch (e) {
-        console.log(e);
+        log(e);
         res.render('account/edit', { f: buildFormObj(form, e) });
       }
     })
@@ -48,6 +48,7 @@ export default (router, container) => {
         res.redirect(router.namedRoutes.build('root'));
         return;
       } catch (e) {
+        log(e);
         res.render('account/edit', { f: buildFormObj(form, e) });
       }
     })
@@ -70,6 +71,7 @@ export default (router, container) => {
         res.redirect(router.namedRoutes.build('root'));
         return;
       } catch (e) {
+        log(e);
         res.render('account/password_edit', { f: buildFormObj(form, e) });
       }
     })
@@ -89,6 +91,7 @@ export default (router, container) => {
         res.flash('info', 'User deleted');
         res.redirect(router.namedRoutes.build('root'));
       } catch (e) {
+        log(e);
         res.render('account/destroy_edit', { formElement: buildFormObj(form, e) });
       }
     });

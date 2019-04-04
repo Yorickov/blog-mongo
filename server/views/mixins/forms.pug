@@ -37,3 +37,16 @@ mixin textarea(f, property, label, options = { as: 'text' })
     textarea(name= getInputName(f, property) id= textariaId class='form-control' type= options['as'])= value
     if f.errors[property]
       .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')
+
+mixin selectStatus(f, property, label, items)
+  - const selectId = `selectS_${property}`;
+  - const propValue = f.object[property] || '';
+  .form-group
+    label(for= selectId)= label
+    select.form-control(name= getInputName(f, property) id= selectId)
+      if items
+        each item in items
+          if item.id === propValue || item.id === propValue.id
+            option(value= item.id selected)= item.name
+          else
+            option(value= item.id)= item.name

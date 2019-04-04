@@ -6,6 +6,7 @@ block content
 			.col-sm-8.mx-auto
 				h3.mb-4.mt-3.text-center Edit Post
 				+formFor({ url: url('posts#update', { id: post.id }), method: 'PATCH' })
+					+selectStatus(f, 'category', 'Category', categories)
 					+inputLabel(f, 'title', 'Title')
 					+textarea(f, 'annotation', 'Annotation')
 					+textarea(f, 'content', 'Content')

@@ -7,8 +7,12 @@ block content
         if posts.length > 0
           each post in posts
             .mb-5.pb-5
+              p
+                a.list-item(href=url('root'))= post.category.name
               h2.mt-2.mb-4
-                a.list-item(href=url('posts#show', { id: post.id }))= post.title
+                a.list-item.text-dark(href=url('posts#show', { id: post.id }))= post.title
+              p
+                a.list-item(href=url('root'))= post.author.fullName
               .mt-4
                 p= post.annotation
               .mt-4
