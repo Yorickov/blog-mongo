@@ -42,18 +42,6 @@ html(lang='en')
 
     main(role='main')
       .jumbotron.jumbotron-fluid.py-sm-5
-        .container
-          h1.display-4.text-center BLOG
-          .mt-3.justify-content-center.text-center
-            p
-              a.text-dark(data-toggle='collapse' href='#collapseExample' role='button' aria-expanded='false' aria-controls='collapseExample') Categories
-            #collapseExample.collapse
-              .container
-                .row.justify-content-center
-                  .d-flex.justify-content-center.align-items-center.align-content-center
-                    if categories
-                      each category in categories
-                        .p-2
-                          a.list-item(href=url('categories#show', { name: category.name }))= category.name
+        block submenu
         //- .container.mt-md-5.py-5
       block content

@@ -3,4 +3,5 @@ public
 coverage
 __fixtures__
 dist
+tmp
 

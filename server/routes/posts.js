@@ -1,5 +1,5 @@
 import buildFormObj from '../lib/formObjectBuilder';
-import { reqAuth, isEntityExists, updateEntity } from '../lib/middlwares';
+import { reqAuth, isEntityExists } from '../lib/middlwares';
 
 export default (router, container) => {
   const {
@@ -8,6 +8,7 @@ export default (router, container) => {
     Category,
     log,
     mongoose,
+    updateEntity,
   } = container;
   router
     .get('/posts/new', 'posts#new', reqAuth(router), async (req, res) => {
