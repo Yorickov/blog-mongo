@@ -1,5 +1,5 @@
-const updateEntity = (instanse, form) => {
-  const keys = Object.keys(form);
+const updateEntity = (instanse, form, ...props) => {
+  const keys = props.length > 0 ? props : Object.keys(form);
   return keys.reduce((acc, key) => {
     acc[key] = form[key];
     return acc;

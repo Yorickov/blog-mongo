@@ -18,7 +18,6 @@ export default (router, container) => {
     .post('/posts', 'posts#create', reqAuth(router), async (req, res) => {
       const { form } = req.body;
       const user = await User.findById(req.session.userId);
-      const categories = await Category.find({});
       const category = await Category.findById(form.category);
       const post = new Post({
         ...form,
@@ -37,6 +36,7 @@ export default (router, container) => {
         return;
       } catch (e) {
         log(e);
+        const categories = await Category.find({});
         res.status(422);
         res.render('posts/new', { f: buildFormObj(form, e), categories });
       }
@@ -53,28 +53,32 @@ export default (router, container) => {
     })
     .patch('/posts/:id/update', 'posts#update', async (req, res) => {
       const { form } = req.body;
+      log(form);
       const post = await Post.findById(req.params.id);
-      log(`post: ${post.title}`);
-      const categories = await Category.find({});
+      const initCategoryId = post.category.id;
+      const newCategoryId = form.category;
       const updatedPost = updateEntity(post, form);
-      const category = await Category.findById(form.category);
-      // const user = await User.findById(req.session.userId);
-      // const post = await Post.findById(req.params.id);
-      // post.title = title;
-      // post.annotation = annotation;
-      // post.content = content;
       try {
         await updatedPost.save();
-        log(`post: ${post.title}`);
-        category.posts.pull(post);
-        category.posts.push(updatedPost);
-        await category.save();
-        log(`post ${category.posts[category.posts.length - 1].title} updated`);
+        if (initCategoryId !== newCategoryId) {
+          const newCategory = await Category.findById(newCategoryId);
+          log(`newCat pre: ${newCategory.posts.length}`);
+          newCategory.posts.push(updatedPost);
+          log(`newCat post: ${newCategory.posts.length}`);
+          await newCategory.save();
+          const initCategory = await Category.findById(initCategoryId);
+          log(`oldCat pre ${initCategory.posts.length}`);
+          initCategory.posts.pull(post);
+          log(`oldCat post: ${initCategory.posts.length}`);
+          await initCategory.save();
+        }
+        log(`post ${updatedPost.title} updated`);
         res.flash('info', 'Post has been updated');
         res.redirect(router.namedRoutes.build('posts#show', { id: updatedPost.id }));
         return;
       } catch (e) {
         log(e);
+        const categories = await Category.find({});
         res.status(422);
         res.render('posts/edit', { f: buildFormObj(form, e), post: updatedPost, categories });
       }
@@ -86,8 +90,8 @@ export default (router, container) => {
     .delete('/posts/:id/destroy', 'posts#destroy', reqAuth(router), isEntityExists(Post), async (req, res) => {
       const post = await Post.findById(req.params.id);
       const user = await User.findById(req.session.userId);
-      user.posts.pull(post.id);
       try {
+        user.posts.pull(post);
         await user.save();
         await Post.findByIdAndDelete(post.id);
         res.flash('info', 'Post deleted');
@@ -98,5 +102,17 @@ export default (router, container) => {
         res.flash('info', 'Post not deleted');
         res.redirect(router.namedRoutes.build('posts#show', { id: post.id }));
       }
+    })
+    .get('/posts/categories/:name', 'posts/categories#show', async (req, res) => {
+      const { posts } = await Category.findOne({ name: req.params.name });
+      const categories = await Category.find({});
+      log(`category: ${req.params.name}, posts: ${posts.length}`);
+      res.render('welcome/index', { posts, categories });
+    })
+    .get('/posts/users/:id', 'posts/users#show', async (req, res) => {
+      const { posts } = await User.findById(req.params.id);
+      const categories = await Category.find({});
+      log(`user: ${req.params.id}, posts: ${posts.length}`);
+      res.render('welcome/index', { posts, categories });
     });
 };

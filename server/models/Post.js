@@ -27,6 +27,7 @@ export default (model, Schema) => {
       ref: 'Category',
       autopopulate: true,
     },
+    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag', autopopulate: true }],
   }, { timestamps: true });
 
   postSchema.plugin(require('mongoose-autopopulate')); // eslint-disable-line

@@ -19,7 +19,6 @@ export default (router, container) => {
     })
     .patch('/account/profile', 'account/profile#update', reqAuth(router), async (req, res) => {
       const { form } = req.body;
-      log(`form: ${form.firstName} ${form.lastName}`);
       const user = await User.findById(req.session.userId);
       // user.firstName = form.firstName;
       // user.lastName = form.lastName;
@@ -27,7 +26,7 @@ export default (router, container) => {
       // user.markModified('lastName');
       try {
         await newUser.save();
-        log(`Profile updated to ${newUser.firstName}, ${newUser.lastName}`);
+        log(`Profile updated from ${form.firstName}, ${form.lastName} to ${newUser.firstName}, ${newUser.lastName}`);
         res.flash('info', 'Profile has been updated');
         res.redirect(router.namedRoutes.build('root'));
         return;
@@ -38,12 +37,11 @@ export default (router, container) => {
     })
     .patch('/account/email', 'account/email#update', reqAuth(router), async (req, res) => {
       const { form } = req.body;
-      log(`form: ${form.email}`);
       const user = await User.findById(req.session.userId);
       user.email = form.email;
       try {
         await user.save();
-        log(`Email updated to ${user.email}`);
+        log(`Email updated from ${form.email} to ${user.email}`);
         res.flash('info', 'Email has been updated');
         res.redirect(router.namedRoutes.build('root'));
         return;
@@ -78,7 +76,6 @@ export default (router, container) => {
     .delete('/account', 'account#destroy', reqAuth(router), async (req, res) => {
       const { form } = req.body;
       const user = await User.findById(req.session.userId);
-      log(`form: user.id: ${user.id}`);
       if (user.password !== encrypt(form.password)) {
         res.status(422);
         res.flash('info', 'Wrong current password');

@@ -12,7 +12,7 @@ block submenu
             .d-flex.justify-content-center.align-items-center.align-content-center
               each category in categories
                 .p-2
-                  a.list-item(href=url('categories#show', { name: category.name }))= category.name
+                  a.list-item(href=url('posts/categories#show', { name: category.name }))= category.name
 
 block content
   .container.my-5.py-5
@@ -22,11 +22,11 @@ block content
           each post in posts
             .mb-5.pb-5
               p
-                a.list-item(href=url('root'))= post.category.name
+                a.list-item(href=url('posts/categories#show', { name: post.category.name }))= post.category.name
               h2.mt-2.mb-4
                 a.list-item.text-dark(href=url('posts#show', { id: post.id }))= post.title
               p
-                a.list-item(href=url('root'))= post.author.fullName
+                a.list-item(href=url('posts/users#show', { id: post.author.id }))= post.author.fullName
               .mt-4
                 p= post.annotation
               .mt-4

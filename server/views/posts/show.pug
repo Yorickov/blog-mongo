@@ -6,10 +6,10 @@ block content
 			.col-12.col-lg-10.col-xl-8
 				.mb-5.pb-3
 					p
-						a.list-item(href=url('root'))= post.category.name
+						a.list-item(href=url('posts/categories#show', { name: post.category.name }))= post.category.name
 					h1.mt-2.mb-4= post.title
 					p
-						a.list-item(href=url('root'))= post.author.fullName
+						a.list-item(href=url('posts/users#show', { id: post.author.id }))= post.author.fullName
 					.mt-4= post.content
 				.d-flex.justify-content-center
 					if post.author.id === currentUserId
