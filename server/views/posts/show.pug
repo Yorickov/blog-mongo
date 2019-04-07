@@ -10,7 +10,12 @@ block content
 					h1.mt-2.mb-4= post.title
 					p
 						a.list-item(href=url('posts/users#show', { id: post.author.id }))= post.author.fullName
-					.mt-4= post.content
+					.my-4= post.content
+					p.d-inline Tags:
+						if post.tags.length > 0
+							each tag in post.tags
+								.d-inline.px-1
+									a(href=url('posts/tags#show', { id: tag.id }))= `${tag.name}, `
 				.d-flex.justify-content-center
 					if post.author.id === currentUserId
 						.col-6

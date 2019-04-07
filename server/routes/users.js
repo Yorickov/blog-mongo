@@ -19,7 +19,7 @@ export default (router, container) => {
         res.redirect(router.namedRoutes.build('root'));
         return;
       } catch (e) {
-        log(e);
+        log(`err on user creation: ${e}`);
         res.status(422);
         res.render('users/new', { f: buildFormObj(form, e) });
       }

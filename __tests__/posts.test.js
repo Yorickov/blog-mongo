@@ -33,7 +33,6 @@ const userTest = {
 };
 
 const postTest = {
-  _id: new container.mongoose.Types.ObjectId(),
   title: faker.lorem.word(),
   annotation: faker.lorem.word(),
   content: faker.lorem.word(),
@@ -130,15 +129,6 @@ describe('posts handling', () => {
     const isNewPost = await Post.findOne({ title: postTestUpdateBody.title });
     expect(isNewPost.content).toMatch(postTestUpdateBody.content);
     expect(isNewPost.category.id).toMatch(category2.id);
-
-    // const postUpdatedCategory = await request.agent(server)
-    //   .patch(`/posts/${post.id}/update`)
-    //   .type('form')
-    //   .set('Cookie', cookie)
-    //   .send({ form: { ...postTestUpdateBody, category: category2.id } });
-    // expect(postUpdatedBody).toHaveHTTPStatus(302);
-    // const isNewPost = await Post.findOne({ title: postTestUpdateBody.title });
-    // expect(isNewPost.content).toMatch(postTestUpdateBody.content);
 
     const postDeleteForm = await request.agent(server)
       .get(`/posts/${post.id}/destroy_edit`)
